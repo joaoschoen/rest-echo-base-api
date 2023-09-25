@@ -41,7 +41,6 @@ This api uses a .env file for configuration, at the current moment here are the 
 
 ### GET
 
-
 - :param based endpoint to GET single objects
 
 ### PUT
@@ -55,12 +54,3 @@ This api uses a .env file for configuration, at the current moment here are the 
 ### DELETE
 
 - :param based endpoint to DELETE an object with given param
-
-
-# TODO LIST
-
-- METHODS: 
-    - GET
-        - list method
-        - paging
-        - query

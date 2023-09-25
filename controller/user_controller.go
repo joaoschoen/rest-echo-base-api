@@ -4,12 +4,19 @@ import (
 	"API-ECHO/model"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
 type userResponse struct {
 	User     model.User
+	Response string
+}
+
+type userListResponse struct {
+	UserList []model.User
 	Response string
 }
 
@@ -30,6 +37,67 @@ func GetUser(c echo.Context) error {
 	response := userResponse{
 		User:     user,
 		Response: fmt.Sprint("id to get:", id, " WARN: this is dummy data"),
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func GetUserList(c echo.Context) error {
+
+	// QUERY
+	email := c.QueryParam("email")
+	// PAGING
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, fmt.Sprintf("Page must be a number, received:%d", page))
+	}
+	if page < 0 {
+		return c.JSON(http.StatusBadRequest, fmt.Sprintf("Page number must be positive, received:%d", page))
+	}
+	PAGE_SIZE := 2
+	START := PAGE_SIZE * page
+	END := START + PAGE_SIZE
+	// DATABASE REQUEST GOES HERE
+
+	// DUMMY DATA
+	userList := []model.User{
+		{
+			Email:    "jon1@doe.com",
+			Password: "badPasswordExample",
+		},
+		{
+			Email:    "jon2@doe.com",
+			Password: "badPasswordExample",
+		},
+		{
+			Email:    "dave1@doe.com",
+			Password: "badPasswordExample",
+		},
+		{
+			Email:    "dave2@doe.com",
+			Password: "badPasswordExample",
+		},
+		{
+			Email:    "dave3@doe.com",
+			Password: "badPasswordExample",
+		},
+	}
+
+	var filteredList []model.User
+
+	for i := range userList {
+		if strings.Contains(userList[i].Email, email) {
+			filteredList = append(filteredList, userList[i])
+		}
+	}
+	if END > len(filteredList) {
+		END = len(filteredList)
+	}
+	filteredList = filteredList[START:END]
+	//BUILD RESPONSE
+	response := userListResponse{
+		UserList: filteredList,
+		Response: fmt.Sprint("WARN: this is dummy data"),
 	}
 
 	return c.JSON(http.StatusOK, response)

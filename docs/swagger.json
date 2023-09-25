@@ -1,0 +1,19 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is an API base without database interaction",
+        "title": "REST Echo Base",
+        "contact": {
+            "name": "My linkedin profile",
+            "url": "https://www.linkedin.com/in/joaoschoen/",
+            "email": "joaoschoen@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {},
+    "tags": [
+        {
+            "name": "REST"
+        }
+    ]
+}

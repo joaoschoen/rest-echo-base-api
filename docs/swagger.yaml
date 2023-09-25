@@ -1,0 +1,12 @@
+info:
+  contact:
+    email: joaoschoen@gmail.com
+    name: My linkedin profile
+    url: https://www.linkedin.com/in/joaoschoen/
+  description: This is an API base without database interaction
+  title: REST Echo Base
+  version: "1.0"
+paths: {}
+swagger: "2.0"
+tags:
+- name: REST

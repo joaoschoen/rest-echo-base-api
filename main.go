@@ -1,7 +1,9 @@
 package main
 
 import (
+	_ "API-ECHO/docs"
 	"API-ECHO/router"
+
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,7 +13,17 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
+
+// @title REST Echo Base
+// @version 1.0
+// @description This is an API base without database interaction
+
+// @contact.name My linkedin profile
+// @contact.url https://www.linkedin.com/in/joaoschoen/
+// @contact.email joaoschoen@gmail.com
 
 func main() {
 	// Environment config
@@ -44,6 +56,8 @@ func main() {
 
 		}
 		os.WriteFile("routes.json", data, 0644)
+		// Generate docs
+		Server.GET("/swagger/*", echoSwagger.WrapHandler)
 	}
 
 	// Middleware stack
@@ -56,6 +70,4 @@ func main() {
 
 	// Initialize server
 	Server.Logger.Fatal(Server.Start(fmt.Sprint(":", PORT)))
-	defer Server.Close()
-	defer os.Exit(0)
 }

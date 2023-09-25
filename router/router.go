@@ -9,5 +9,4 @@ import (
 func InitRoutes(e *echo.Echo) {
 
 	view.UserRoutes(e)
-
 }
