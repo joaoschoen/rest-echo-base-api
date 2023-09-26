@@ -16,9 +16,7 @@ import (
 // @Produce		json
 // @Param			id	path		int	true	"User ID"
 // @Success		200	{object}	model.GetUserResponse
-// @Failure		400	{object}	model.HTTPError
-// @Failure		404	{object}	model.HTTPError
-// @Failure		500	{object}	model.HTTPError
+// @Failure		404	"User not found."
 // @Router			/user/{id} [get]
 func GetUser(c echo.Context) error {
 	// PARAM
@@ -36,7 +34,7 @@ func GetUser(c echo.Context) error {
 	**/
 
 	if id == "404" {
-		return c.JSON(http.StatusNotFound, nil)
+		return c.JSON(http.StatusNotFound, "User not found.")
 	}
 
 	//BUILD RESPONSE
@@ -55,9 +53,7 @@ func GetUser(c echo.Context) error {
 // @QueryParam			email	path		string	true	"Email filter"
 // @QueryParam			page	path		int		true	"Page"
 // @Success		200		{object}	model.GetUserListResponse
-// @Failure		400		{object}	model.HTTPError
-// @Failure		404		{object}	model.HTTPError
-// @Failure		500		{object}	model.HTTPError
+// @Failure		500	"Internal server error"
 // @Router			/user/list [get]
 func GetUserList(c echo.Context) error {
 	// QUERY
@@ -131,9 +127,9 @@ func GetUserList(c echo.Context) error {
 // @Produce		json
 // @Param			email	path		string	true	"User email"
 // @Success		200		{object}	model.PostUserResponse
-// @Failure		400		{object}	model.HTTPError
-// @Failure		404		{object}	model.HTTPError
-// @Failure		500		{object}	model.HTTPError
+// @Failure		400 "Email already in use"
+// @Failure		404	"User not found."
+// @Failure		500	"Internal server error"
 // @Router			/user [post]
 func PostUser(c echo.Context) error {
 	// BODY
@@ -163,9 +159,9 @@ func PostUser(c echo.Context) error {
 // @Produce		json
 // @Param			id	path		string	true	"User ID"
 // @Success		200		{object}	model.PostUserResponse
-// @Failure		400		{object}	model.HTTPError
-// @Failure		404		{object}	model.HTTPError
-// @Failure		500		{object}	model.HTTPError
+// @Failure		400 "Email already in use"
+// @Failure		404	"User not found."
+// @Failure		500	"Internal server error"
 // @Router			/user [put]
 func PutUser(c echo.Context) error {
 	// PARAM
@@ -207,7 +203,7 @@ func PutUser(c echo.Context) error {
 // @Produce		json
 // @Param			id	path		string	true	"User ID"
 // @Success		200		{object}	model.DeleteUserResponse
-// @Failure		404		{object}	model.HTTPError
+// @Failure		404	"User not found."
 // @Router			/user [delete]
 func DeleteUser(c echo.Context) error {
 	// PARAM

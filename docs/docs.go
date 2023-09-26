@@ -49,22 +49,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "Email already in use"
                     },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "User not found."
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "Internal server error"
                     }
                 }
             },
@@ -97,22 +88,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "Email already in use"
                     },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "User not found."
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "Internal server error"
                     }
                 }
             },
@@ -142,10 +124,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "User not found."
                     }
                 }
             }
@@ -167,23 +146,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.GetUserListResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
-                    },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "Internal server error"
                     }
                 }
             }
@@ -214,23 +178,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.GetUserResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
-                    },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.HTTPError"
-                        }
+                        "description": "User not found."
                     }
                 }
             }
@@ -264,14 +213,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/model.SafeUser"
-                }
-            }
-        },
-        "model.HTTPError": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
                 }
             }
         },
