@@ -10,6 +10,48 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// DUMMY DATA
+var DummyUser = model.SafeUser{
+	ID:    "someID",
+	Email: "jon@doe.com",
+}
+
+// @Summary		Create new user
+// @Description	Receives user email and password, returns UUID
+// @Tags			user
+// @Accept			json
+// @Produce		json
+// @Param			email	path		string	true	"User email"
+// @Success		201		{object}	model.PostUserResponse
+// @Failure		400 "Bad Request"
+// @Failure		422 "Email already in use"
+// @Failure		500	"Internal server error"
+// @Router			/user [post]
+func PostUser(c echo.Context) error {
+	// BODY
+	var user model.UnsafeUser
+	err := c.Bind(&user)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+	}
+	if user.Email == "" || user.Password == "" {
+		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+	}
+
+	// DATABASE REQUEST GOES HERE
+
+	// CHECK DUPLICATE
+	if user.Email == "alreadyIn@use.com" {
+		return c.JSON(http.StatusUnprocessableEntity, "Email already in use")
+	}
+
+	// BUILD RESPONSE
+	response := model.PostUserResponse{
+		ID: "somerandomid",
+	}
+	return c.JSON(http.StatusCreated, response)
+}
+
 // @Summary		Get user data
 // @Description	Receives ID by request param and retreives user data
 // @Tags			user
@@ -23,12 +65,6 @@ func GetUser(c echo.Context) error {
 	var id string
 	id = c.Param("id")
 
-	// DUMMY DATA
-	user := model.SafeUser{
-		ID:    "someID",
-		Email: "jon@doe.com",
-	}
-
 	/**
 		DATABASE REQUEST GOES HERE
 	**/
@@ -39,7 +75,7 @@ func GetUser(c echo.Context) error {
 
 	//BUILD RESPONSE
 	response := model.GetUserResponse{
-		Data: user,
+		Data: DummyUser,
 	}
 
 	return c.JSON(http.StatusOK, response)
@@ -71,7 +107,6 @@ func GetUserList(c echo.Context) error {
 	START := PAGE_SIZE * page
 	END := START + PAGE_SIZE
 	// DATABASE REQUEST GOES HERE
-
 	// DUMMY DATA
 	userList := []model.SafeUser{
 		{
@@ -95,7 +130,9 @@ func GetUserList(c echo.Context) error {
 			ID:    "someID5",
 		},
 	}
-	totalPages := int(math.Ceil(float64(len(userList) / 2)))
+	var totalPages int
+	var responseList []model.SafeUser
+	// IF FILTERS
 	var filteredList []model.SafeUser
 	if email != "" {
 		for i := range userList {
@@ -103,52 +140,28 @@ func GetUserList(c echo.Context) error {
 				filteredList = append(filteredList, userList[i])
 			}
 		}
+		if END > len(filteredList) {
+			END = len(filteredList)
+		}
+		responseList = filteredList[START:END]
+		totalPages = int(math.Ceil(float64(len(filteredList) / 2)))
+	} else {
+		if END > len(userList) {
+			END = len(userList)
+		}
+		responseList = userList[START:END]
+		totalPages = int(math.Ceil(float64(len(userList) / 2)))
 	}
-	if END > len(filteredList) {
-		END = len(filteredList)
-	}
-	filteredList = filteredList[START:END]
+
 	//BUILD RESPONSE
 	response := model.GetUserListResponse{
-		Data: filteredList,
+		Data: responseList,
 		Paging: model.Paging{
 			Page:  page,
 			Total: totalPages,
 		},
 	}
 
-	return c.JSON(http.StatusOK, response)
-}
-
-// @Summary		Create new user
-// @Description	Receives user email and password, returns UUID
-// @Tags			user
-// @Accept			json
-// @Produce		json
-// @Param			email	path		string	true	"User email"
-// @Success		200		{object}	model.PostUserResponse
-// @Failure		400 "Email already in use"
-// @Failure		404	"User not found."
-// @Failure		500	"Internal server error"
-// @Router			/user [post]
-func PostUser(c echo.Context) error {
-	// BODY
-	var user model.UnsafeUser
-	err := c.Bind(&user)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Error while parsing received data")
-	}
-	// DATABASE REQUEST GOES HERE
-
-	// CHECK DUPLICATE
-	if user.Email == "alreadyIn@use.com" {
-		return c.JSON(http.StatusBadRequest, "Email already in use")
-	}
-
-	// BUILD RESPONSE
-	response := model.PostUserResponse{
-		ID: "somerandomid",
-	}
 	return c.JSON(http.StatusOK, response)
 }
 
