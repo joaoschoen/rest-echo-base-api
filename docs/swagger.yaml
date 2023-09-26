@@ -1,3 +1,47 @@
+definitions:
+  model.DeleteUserResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  model.GetUserListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.SafeUser'
+        type: array
+      paging:
+        $ref: '#/definitions/model.Paging'
+    type: object
+  model.GetUserResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.SafeUser'
+    type: object
+  model.HTTPError:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Paging:
+    properties:
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  model.PostUserResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  model.SafeUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+    type: object
 info:
   contact:
     email: joaoschoen@gmail.com
@@ -6,7 +50,150 @@ info:
   description: This is an API base without database interaction
   title: REST Echo Base
   version: "1.0"
-paths: {}
+paths:
+  /user:
+    delete:
+      description: Receives user ID, returns deleted ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeleteUserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: Delete user
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Receives user email and password, returns UUID
+      parameters:
+      - description: User email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PostUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: Create new user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Receives updated user object, returns updated object
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PostUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: Update user
+      tags:
+      - user
+  /user/{id}:
+    get:
+      description: Receives ID by request param and retreives user data
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: Get user data
+      tags:
+      - user
+  /user/list:
+    get:
+      description: |-
+        Can receive email as a query filter
+        This route is paged, it requrires a page number to operate if none is received, will return page 0
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetUserListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: Get user list
+      tags:
+      - user
 swagger: "2.0"
-tags:
-- name: REST

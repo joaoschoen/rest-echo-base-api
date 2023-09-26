@@ -17,13 +17,13 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title REST Echo Base
-// @version 1.0
-// @description This is an API base without database interaction
+//	@title			REST Echo Base
+//	@version		1.0
+//	@description	This is an API base without database interaction
 
-// @contact.name My linkedin profile
-// @contact.url https://www.linkedin.com/in/joaoschoen/
-// @contact.email joaoschoen@gmail.com
+//	@contact.name	My linkedin profile
+//	@contact.url	https://www.linkedin.com/in/joaoschoen/
+//	@contact.email	joaoschoen@gmail.com
 
 func main() {
 	// Environment config
