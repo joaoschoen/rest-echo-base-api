@@ -1,7 +1,10 @@
 package controller
 
 import (
+	// Project
 	"API-ECHO/model"
+
+	// Standard
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -9,6 +12,7 @@ import (
 	"strings"
 	"testing"
 
+	// External
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -19,11 +23,11 @@ var (
 	emptyUser        = model.UnsafeUser{}
 	alreadyInUseUser = model.UnsafeUser{
 		Email:    "alreadyIn@use.com",
-		Password: "somePassword",
+		Password: "BadExample",
 	}
 	successfulUser = model.UnsafeUser{
 		Email:    "jon@doe.com",
-		Password: "somePassword",
+		Password: "BadExample",
 	}
 )
 
@@ -233,5 +237,155 @@ func TestGetUserList(t *testing.T) {
 		var response model.GetUserListResponse
 		json.Unmarshal(recorder.Body.Bytes(), &response)
 		assert.Equal(t, expectedPage, response.Paging.Page)
+	}
+}
+
+// PUT TESTS
+
+func TestPutUser(t *testing.T) {
+	// SETUP
+	TestServer := echo.New()
+	METHOD := http.MethodPost
+	URL := "/user"
+	var DATA *strings.Reader
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+	var context echo.Context
+
+	// TEST PREPARATION
+	BadlyFormedJSON := func() {
+		DATA = strings.NewReader(badlyFormedJSON)
+		request = httptest.NewRequest(METHOD, URL, DATA)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		return
+	}
+	NotFound := func() {
+		user, err := json.Marshal(successfulUser)
+		if err != nil {
+		}
+		DATA = strings.NewReader(string(user))
+		request = httptest.NewRequest(METHOD, URL, DATA)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("404")
+		return
+	}
+	EmptyObjectBodyTest := func() {
+		user, err := json.Marshal(emptyUser)
+		if err != nil {
+		}
+		DATA = strings.NewReader(string(user))
+		request = httptest.NewRequest(METHOD, URL, DATA)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("someID")
+		return
+	}
+	AlreadyInUseTest := func() {
+		user, err := json.Marshal(alreadyInUseUser)
+		if err != nil {
+		}
+		DATA = strings.NewReader(string(user))
+		request = httptest.NewRequest(METHOD, URL, DATA)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("someID")
+		return
+	}
+	SuccessTest := func() {
+		user, err := json.Marshal(successfulUser)
+		if err != nil {
+		}
+		DATA = strings.NewReader(string(user))
+		request = httptest.NewRequest(METHOD, URL, DATA)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("someID")
+		return
+	}
+
+	// TESTS
+	BadlyFormedJSON()
+	if assert.NoError(t, PutUser(context)) {
+		assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	}
+
+	NotFound()
+	if assert.NoError(t, PutUser(context)) {
+		assert.Equal(t, http.StatusNotFound, recorder.Code)
+	}
+
+	EmptyObjectBodyTest()
+	if assert.NoError(t, PutUser(context)) {
+		assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	}
+
+	AlreadyInUseTest()
+	if assert.NoError(t, PutUser(context)) {
+		assert.Equal(t, http.StatusUnprocessableEntity, recorder.Code)
+	}
+
+	SuccessTest()
+	if assert.NoError(t, PutUser(context)) {
+		assert.Equal(t, http.StatusOK, recorder.Code)
+	}
+}
+
+// DELETE TESTS
+
+func TestDeleteUser(t *testing.T) {
+	// SETUP
+	TestServer := echo.New()
+	METHOD := http.MethodPost
+	URL := "/user"
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+	var context echo.Context
+
+	// TEST PREPARATION
+	NotFound := func() {
+		request = httptest.NewRequest(METHOD, URL, nil)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("404")
+		return
+	}
+	SuccessTest := func() {
+		request = httptest.NewRequest(METHOD, URL, nil)
+		request.Header.Set("Content-Type", "application/json")
+		recorder = httptest.NewRecorder()
+		context = TestServer.NewContext(request, recorder)
+		context.SetPath("/users/:id")
+		context.SetParamNames("id")
+		context.SetParamValues("someID")
+		return
+	}
+
+	// TESTS
+	NotFound()
+	if assert.NoError(t, DeleteUser(context)) {
+		assert.Equal(t, http.StatusNotFound, recorder.Code)
+	}
+
+	SuccessTest()
+	if assert.NoError(t, DeleteUser(context)) {
+		assert.Equal(t, http.StatusOK, recorder.Code)
 	}
 }

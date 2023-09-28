@@ -4,12 +4,19 @@ The objective of this project is to develop a fully functional API using all the
 
 The secondary objective is that this API is a boilerplate for any database implementation, so it cannot connect to any database, it is only concerned with the treatment of http requests, thus it knows how to use all 
 
+# **Important:** This is a warning message.
+
+This code is not made with the intention of being safe and should not be used in a serious application as is, reason why all the mentions to passwords use the "BadExample" text, there is no authentication yet, I will be implementing it in the future though.
+
+This is a learning project, by the end of it I want to have a fully functional and safe API that could be used as an example of how to do things in golang without having to search too much for it and also as a repository of my knowledge of how to do things in golang.
+
 ## Features
 
 - MVC pattern for project structure
 - Routing with multiple files and folders
 - JSON format for data interchange
 - Documentation using Swagger 2.0
+- Unit testing with 100% coverage
 
 ## Libs used
 
@@ -21,6 +28,8 @@ The secondary objective is that this API is a boilerplate for any database imple
     - Documentation
 - [Echo Swagger](https://github.com/swaggo/echo-swagger)
     - Serving the Swagger UI
+- [Testify](https://github.com/stretchr/testify)
+    - Unit testing 
     
 # How to run
 
@@ -57,6 +66,15 @@ This api uses a .env file for configuration, at the current moment here are the 
     - Number representing the port on which the API will be served
 - DEBUG
     - If se to true, Debug mode enables the generation of a routes file and the serving of Swagger documentation
+
+## Testing
+
+Testing this API was done with mock tests and the [Testify](https://github.com/stretchr/testify) lib
+
+To run all tests, run the following command: 
+```
+go test ./...
+```
 
 ## Methods
 

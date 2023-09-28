@@ -34,6 +34,7 @@ func PostUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
+	// Empty data
 	if user.Email == "" || user.Password == "" {
 		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
@@ -185,8 +186,13 @@ func PutUser(c echo.Context) error {
 	var user model.UnsafeUser
 	err := c.Bind(&user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Error while parsing received data")
+		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
+	// Empty data
+	if user.Email == "" || user.Password == "" {
+		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+	}
+
 	// DATABASE REQUEST GOES HERE
 
 	// SIMULATED NOT FOUND
@@ -196,7 +202,7 @@ func PutUser(c echo.Context) error {
 
 	// SIMULATED DUPLICATE
 	if user.Email == "alreadyIn@use.com" {
-		return c.JSON(http.StatusBadRequest, "Email already in use")
+		return c.JSON(http.StatusUnprocessableEntity, "Email already in use")
 	}
 
 	// BUILD RESPONSE

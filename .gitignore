@@ -26,5 +26,6 @@ go.work
 # Air temporary files
 /tmp
 
-# Debug routes list file
+# Debug files
 routes.json
+__debug*
