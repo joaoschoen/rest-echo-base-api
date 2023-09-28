@@ -69,12 +69,14 @@ This api uses a .env file for configuration, at the current moment here are the 
 
 ## Testing
 
-Testing this API was done with mock tests and the [Testify](https://github.com/stretchr/testify) lib
+Testing this API was done with mock tests and the [Testify](https://github.com/stretchr/testify) lib for assertions alongside Golang's standard testing library
 
 To run all tests, run the following command: 
 ```
-go test ./...
+go test ./... 
 ```
+
+You can also add the **-cover** flag at the end to see test coverage in all the packages
 
 ## Methods
 
