@@ -27,30 +27,30 @@ var DummyUser = model.SafeUser{
 // @Failure		422 "Email already in use"
 // @Failure		500	"Internal server error"
 // @Router			/user [post]
-func PostUser(c echo.Context) error {
+func PostUser(context echo.Context) error {
 	// BODY
 	var user model.UnsafeUser
-	err := c.Bind(&user)
+	err := context.Bind(&user)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+		return context.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
 	// Empty data
 	if user.Email == "" || user.Password == "" {
-		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+		return context.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
 
 	// DATABASE REQUEST GOES HERE
 
 	// CHECK DUPLICATE
 	if user.Email == "alreadyIn@use.com" {
-		return c.JSON(http.StatusUnprocessableEntity, "Email already in use")
+		return context.JSON(http.StatusUnprocessableEntity, "Email already in use")
 	}
 
 	// BUILD RESPONSE
 	response := model.PostUserResponse{
 		ID: "somerandomid",
 	}
-	return c.JSON(http.StatusCreated, response)
+	return context.JSON(http.StatusCreated, response)
 }
 
 // @Summary		Get user data
@@ -61,17 +61,17 @@ func PostUser(c echo.Context) error {
 // @Success		200	{object}	model.GetUserResponse
 // @Failure		404	"User not found."
 // @Router			/user/{id} [get]
-func GetUser(c echo.Context) error {
+func GetUser(context echo.Context) error {
 	// PARAM
 	var id string
-	id = c.Param("id")
+	id = context.Param("id")
 
 	/**
 		DATABASE REQUEST GOES HERE
 	**/
 
 	if id == "404" {
-		return c.JSON(http.StatusNotFound, "User not found.")
+		return context.JSON(http.StatusNotFound, "User not found.")
 	}
 
 	//BUILD RESPONSE
@@ -79,7 +79,7 @@ func GetUser(c echo.Context) error {
 		Data: DummyUser,
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return context.JSON(http.StatusOK, response)
 }
 
 // @Summary		Get user list
@@ -92,11 +92,11 @@ func GetUser(c echo.Context) error {
 // @Success		200		{object}	model.GetUserListResponse
 // @Failure		500	"Internal server error"
 // @Router			/user/list [get]
-func GetUserList(c echo.Context) error {
+func GetUserList(context echo.Context) error {
 	// QUERY
-	email := c.QueryParam("email")
+	email := context.QueryParam("email")
 	// PAGING
-	page, err := strconv.Atoi(c.QueryParam("page"))
+	page, err := strconv.Atoi(context.QueryParam("page"))
 	if err != nil {
 		page = 0
 	}
@@ -163,7 +163,7 @@ func GetUserList(c echo.Context) error {
 		},
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return context.JSON(http.StatusOK, response)
 }
 
 // @Summary		Update user
@@ -177,32 +177,32 @@ func GetUserList(c echo.Context) error {
 // @Failure		404	"User not found."
 // @Failure		500	"Internal server error"
 // @Router			/user [put]
-func PutUser(c echo.Context) error {
+func PutUser(context echo.Context) error {
 	// PARAM
 	var id string
-	id = c.Param("id")
+	id = context.Param("id")
 
 	// BODY
 	var user model.UnsafeUser
-	err := c.Bind(&user)
+	err := context.Bind(&user)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+		return context.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
 	// Empty data
 	if user.Email == "" || user.Password == "" {
-		return c.JSON(http.StatusBadRequest, "Error while parsing received data")
+		return context.JSON(http.StatusBadRequest, "Error while parsing received data")
 	}
 
 	// DATABASE REQUEST GOES HERE
 
 	// SIMULATED NOT FOUND
 	if id == "404" {
-		return c.JSON(http.StatusNotFound, "User not found")
+		return context.JSON(http.StatusNotFound, "User not found")
 	}
 
 	// SIMULATED DUPLICATE
 	if user.Email == "alreadyIn@use.com" {
-		return c.JSON(http.StatusUnprocessableEntity, "Email already in use")
+		return context.JSON(http.StatusUnprocessableEntity, "Email already in use")
 	}
 
 	// BUILD RESPONSE
@@ -213,7 +213,7 @@ func PutUser(c echo.Context) error {
 		},
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return context.JSON(http.StatusOK, response)
 }
 
 // @Summary		Delete user
@@ -224,14 +224,14 @@ func PutUser(c echo.Context) error {
 // @Success		200		{object}	model.DeleteUserResponse
 // @Failure		404	"User not found."
 // @Router			/user [delete]
-func DeleteUser(c echo.Context) error {
+func DeleteUser(context echo.Context) error {
 	// PARAM
 	var id string
-	id = c.Param("id")
+	id = context.Param("id")
 
 	// SIMULATED NOT FOUND
 	if id == "404" {
-		return c.JSON(http.StatusNotFound, "User doesn't exist")
+		return context.JSON(http.StatusNotFound, "User doesn't exist")
 	}
 
 	// DATABASE REQUEST GOES HERE
@@ -241,5 +241,5 @@ func DeleteUser(c echo.Context) error {
 		ID: id,
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return context.JSON(http.StatusOK, response)
 }

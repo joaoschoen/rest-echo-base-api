@@ -6,11 +6,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func UserRoutes(e *echo.Echo) {
-	g := e.Group("/user")
-	g.GET("/:id", controller.GetUser)
-	g.GET("/list", controller.GetUserList)
-	g.POST("/", controller.PostUser)
-	g.PUT("/:id", controller.PutUser)
-	g.DELETE("/:id", controller.DeleteUser)
+func UserRoutes(server *echo.Echo) {
+	group := server.Group("/user")
+	group.GET("/:id", controller.GetUser)
+	group.GET("/list", controller.GetUserList)
+	group.POST("/", controller.PostUser)
+	group.PUT("/:id", controller.PutUser)
+	group.DELETE("/:id", controller.DeleteUser)
 }

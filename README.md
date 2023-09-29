@@ -2,6 +2,35 @@
 
 The objective of this project is to develop a fully functional API using all the functionalities required from Echo to comply to the best practices of REST API
 
+One particular design choice I made for this project is to make the names of my variables and functions be more verbose and self descriptive then what I usually see in golang projects 
+
+I much prefer to work with code like this: 
+```
+func DeleteUser(context echo.Context) error {
+	var id string
+	id = context.Param("id")
+
+	response := model.DeleteUserResponse{
+		ID: id,
+	}
+
+	return context.JSON(http.StatusOK, response)
+}
+```
+Then this:
+```
+func DeleteUser(c echo.Context) error {
+	var id string
+	id = c.Param("id")
+
+	r := model.DeleteUserResponse{
+		ID: id,
+	}
+
+	return c.JSON(http.StatusOK, r)
+}
+```
+
 The secondary objective is that this API is a boilerplate for any database implementation, so it cannot connect to any database, it is only concerned with the treatment of http requests, thus it knows how to use all 
 
 # **Important:** This is a warning message.
@@ -70,6 +99,13 @@ This api uses a .env file for configuration, at the current moment here are the 
 ## Testing
 
 Testing this API was done with mock tests and the [Testify](https://github.com/stretchr/testify) lib for assertions alongside Golang's standard testing library
+
+The tests in this repository were made using the following structure:
+
+- One function per handler function
+    - For each test for a specific handler:
+        - One function that sets the stage
+        - One assert group that runs the handler with the test presets
 
 To run all tests, run the following command: 
 ```

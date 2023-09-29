@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoutes(e *echo.Echo) {
+func InitRoutes(server *echo.Echo) {
 
-	view.UserRoutes(e)
+	view.UserRoutes(server)
 }
